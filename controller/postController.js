@@ -12,18 +12,18 @@ function index(req, res) {
 }
 
 function show(req, res) {
-    const requestId = parseInt(req.params.id);
-    let resultSearch = posts.find((element) => element.id === requestId);
 
-    if (!resultSearch) {
-        res.status(404);
-        return res.json({
-            error: 'Not Found',
-            message: 'Post non trovato'
-        });
-    }
+    const { id } = req.params;
 
-    res.json(resultSearch);
+    const sql = 'SELECT * FROM posts WHERE id = ?';
+
+    connection.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).json({ error: 'Errore nel collegamento con il Database' });
+        if (results.length === 0) return res.status(404).json({ error: 'Post non trovato' });
+
+        res.json(results[0]);
+    });
+
 }
 
 function create(req, res) {
