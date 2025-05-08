@@ -88,22 +88,17 @@ function patch(req, res) {
 }
 
 function destroy(req, res) {
-    const requestId = parseInt(req.params.id);
-    let resultSearch = posts.find((element) => element.id === requestId);
+    const { id } = req.params;
 
-    posts.splice(posts.indexOf(resultSearch), 1);
+    const sql = 'DELETE FROM posts WHERE id = ?';
 
-    if (!resultSearch) {
-        res.status(404);
-        return res.json({
-            error: 'Not Found',
-            message: 'Post non trovato'
-        });
-    }
+    connection.query(sql, [id], (err, results) => {
 
-    console.log(posts);
+        if (err) return res.status(500).json({ error: 'Errore nel collegamento con il Database' });
+        if (results.length === 0) return res.status(404).json({ error: 'Post non trovato' });
 
-    res.status(204);
+        res.sendStatus(204);
+    });
 }
 
 
