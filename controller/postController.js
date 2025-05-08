@@ -1,7 +1,14 @@
 const posts = require('../data/posts.js');
+const connection = require('../data/db.js');
 
 function index(req, res) {
-    res.json(posts);
+    const sql = 'SELECT * FROM posts';
+
+    // eseguiamo la query!
+    connection.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: 'Errore nel collegamento con il Database' });
+        res.json(results);
+    });
 }
 
 function show(req, res) {
