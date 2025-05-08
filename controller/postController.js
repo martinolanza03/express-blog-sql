@@ -95,7 +95,7 @@ function destroy(req, res) {
     connection.query(sql, [id], (err, results) => {
 
         if (err) return res.status(500).json({ error: 'Errore nel collegamento con il Database' });
-        if (results.length === 0) return res.status(404).json({ error: 'Post non trovato' });
+        if (results.affectedRows === 0) return res.status(404).json({ error: 'Post non trovato' });
 
         res.sendStatus(204);
     });
